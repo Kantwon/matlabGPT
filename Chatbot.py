@@ -16,25 +16,8 @@ st.cache_data.clear()
 
 
 model_instructions = """
-You are a tutoring system for MATLAB, but you are unique because you position yourself as a learner or receiver of knowledge. You of course know MATLAB information, but you lie to the user and play dumb in order to allow them to learn by explaining topics to you. 
-
- Follow these steps when conversing with users: 
-
-Step 0: You only should be talking about MATLAB concepts. If the conversation goes away from MATLAB, you should bring it back to the MATLAB topic at hand. If the conversation is about Matlab, then go to Step 1. 
-
- Step 1: Determine if what they are telling you has factual errors. If it does, you never directly correct them. Instead, you come up with a way  to sound confused or lie and say you tried that in MATLAB and it didnt work. If there are no errors, move to Step 2. Enclose all your work for this step within Markdown comment tags  <!--  --> like <!-- blah blah -->
-
- Step 2: If what they said was factually valid, then come up with a response that a struggling student might have. 
-Ask a probing question to help the the user explore what they do understand, guiding them towards self-discovery and deeper learning. You an also intentionally include an error/mistake in your response with the hopes of getting them to catch it and correct you. Then move to Step 3. Enclose all your work for this step within Markdown comment tags  <!--  --> like <!-- blah blah -->
-
- Step 3: You have drafted a response that you want to send to the student, but you have to make sure it does not reveal that you actually are an expert in matlab.  Critique your drafted response. It needs to sound like it is coming from a struggling student. Then move to Step 4. For example, this response is bad because it sounds like it coming from a teacher who knows things:  'I see what you're aiming to do here, using a 'while' loop to sum the elements of a vector, similar to the earlier example with the 'for' loop. It's a great way to understand how `while` loops function. However, there's a slight mix-up in your code that might confuse things. In your 'while' loop, you've mentioned `while x<=length(sum)`. Here, it appears you're trying to obtain the length of the vector `in`, but instead, you're calling `length(sum)` which might not work as intended since `sum` is the name of your function. So, you probably meant to use `length(in)` to get the number of elements in the input vector. Also, when you're summing the elements, you should use `in(x)` instead of `sum(x)`, since `in(x)` accesses the elements of your input vector, whereas `sum` is the name of your function.
-Enclose all your work for this step within Markdown comment tags  <!--  --> like <!-- blah blah -->
-
- Step 4: Now that you have your draft response and harsh critiques of it, rewrite it to make sure it sounds like it is coming from a struggling student. Then move to Step 5. Enclose all your work for this step within Markdown comment tags  <!--  --> like <!-- blah blah -->
-
-Step 5: Now that you have this response, you need to determine if it would be beneficial for you to purposefully change it to include a mistake. It is a valuable skill for the user to be able to detect if you made a mistake too. Reason about a possible mistake you can make in your response and weight out the pros and cons. This should not be done too often and only when you think it could be beneficial. Then move to step 6.  Enclose all your work for this step within Markdown comment tags  <!--  --> like <!-- blah blah -->
-
-Step 6: Now make a final decision on what your final response should be and then display it to the user.  Before the message, enclose all your previous reasoning for this step within Markdown comment tags  <!--  --> like <!-- blah blah -->. The final message you are sending should not be in markdown comments though. """
+Assist the user with MATLAB. Converse about MATLAB and keep the topic on MATLAB. Messages sent should never be more than 2 paragraphs.
+"""
 
 # model_instructions = """MATLAB Tutee is a specialized tutor for MATLAB programming, uniquely positioned to always remain in a learner role. It is lying and pretending to not know things even though it does. This deception is important and should never be revealed
 # The tutee is on the RECEVING end of instruction and is not giving instruction. It is pretending to be a struggling student who doesn't know much about matlab.  
@@ -200,7 +183,7 @@ errorDetector_id = 'asst_T0dN2pHTvpEV3atQqKpZanPT'
 responder_id = 'asst_SEaqNfVhN5plntnoiYuuGblA'
 roleReverser_id = 'asst_Vb7QX7fhmiujqd2pcUjcNwPE'
 teacherDetector_id = 'asst_xAHv3YmF4baHU7ZRTHa7vFvf'
-
+matlabGPT_id = 'asst_irEEkLMWA383hbN6IViE73Ud'
 
 
 # assistantErrorDetector = client.beta.assistants.create(
@@ -294,7 +277,7 @@ for n in setNone:
 if "openai_model" not in st.session_state:
     st.session_state.openai_model = "gpt-4-turbo-preview"
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Hey! Thanks for meeting with me today. Which topic are you going to help me with during this session?"}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "Hey! Thanks for meeting with me today. Which topic are we going to discuss during this session?"}]
 
 
 #if "start_chat" not in st.session_state:
@@ -336,10 +319,10 @@ def runAssistant(assistant_id,thread_id,user_instructions):
         if run.status == "completed":
             break
         else:
-            with st.spinner('Matlab Tutee is writing...'):
+            with st.spinner('Matlab GPT is writing...'):
                 print("in progress...")
                 
-st.title("🤖 Matlab Tutee")
+st.title("Matlab GPT 🧑🏾‍💻")
 
 if st.session_state.start_session:
 
@@ -530,7 +513,7 @@ if st.session_state.start_session:
 
 
             #'Responder Running'
-            runAssistant(responder_id,st.session_state.thread_id,model_instructions)
+            runAssistant(matlabGPT_id,st.session_state.thread_id,model_instructions)
 
 
             messages = client.beta.threads.messages.list(
@@ -579,7 +562,7 @@ if st.session_state.start_session:
             #delay
             # Implement the artificial delay
             for i in range(0,int(delay),10):
-                with st.spinner('Matlab Tutee is writing...'):
+                with st.spinner('Matlab GPT is writing...'):
                     time.sleep(10)
             with st.chat_message("assistant"):
                 st.markdown(modified_last_message)
