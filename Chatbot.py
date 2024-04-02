@@ -366,7 +366,6 @@ if st.session_state.start_session:
                     #    })
                     df3 = pd.concat([df1,df2],ignore_index = True)
 
-
                     conn.update(worksheet="Conversations",data=df3)
                     del st.session_state.messages
                 
@@ -557,10 +556,11 @@ if st.session_state.start_session:
             words_in_message = len(modified_last_message.split())
             words_per_minute = 100
             delay = (words_in_message / words_per_minute) * 60 
-            if delay > 20:
-                delay = 20
+            if delay > 40:
+                delay = random.randint(5, 40)
             #delay
             # Implement the artificial delay
+                delay
             for i in range(0,int(delay),10):
                 with st.spinner('Matlab GPT is writing...'):
                     time.sleep(10)
