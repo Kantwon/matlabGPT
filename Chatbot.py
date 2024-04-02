@@ -560,7 +560,7 @@ if st.session_state.start_session:
                 delay = random.randint(5, 40)
             #delay
             # Implement the artificial delay
-                delay
+            #delay
             for i in range(0,int(delay),10):
                 with st.spinner('Matlab GPT is writing...'):
                     time.sleep(10)
